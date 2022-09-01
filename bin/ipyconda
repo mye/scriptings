@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+envpath=$(conda info --base)/envs
+
+if [[ $1 = "" || ! -d "$envpath/$1" ]]; then
+	echo "conda environment $envpath/$1 not found"
+	exit 1
+fi
+
+ipy="$envpath/$1/bin/ipython"
+
+shift
+echo "$ipy $@"
+echo $(pwd)
+# actually use my ipy wrapper script which calls the echo'd ipython
+# with my preferences
+exec ipy $@

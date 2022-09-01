@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+export PYTHONSTARTUP=~/.pythonrc
+export NO_COLOR=1
+export TERM=dumb
+
+envpath=$(conda info --base)/envs
+
+if [[ $1 = "" || ! -d "$envpath/$1" ]]; then
+	echo "conda environment $envpath/$1 not found"
+	exit 1
+fi
+
+py="$envpath/$1/bin/python"
+
+shift
+echo "$py $@"
+echo $(pwd)
+exec $py $@

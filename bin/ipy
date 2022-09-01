@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+export PYTHONSTARTUP=~/.pythonrc
+export NO_COLOR=1
+export TERM=dumb
+
+exec ipython --simple-prompt --colors=NoColor --no-color-info --no-confirm-exit --no-banner -- $@

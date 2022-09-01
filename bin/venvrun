@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+if [[ ! -d ./.venv ]]; then
+	echo "venv environment $(pwd)/.venv not found"
+	exit 1
+
+fi
+
+. ./.venv/bin/activate
+
+CMD=$@
+if [[ $@ == "" ]]; then
+	CMD=$SHELL
+fi
+
+which "$CMD"
+exec $CMD
