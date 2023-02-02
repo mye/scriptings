@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+9p read acme/log | while read line; do
+	winid=$(echo "$line" | cut -d' ' -f1)
+	action=$(echo "$line" | cut -d' ' -f2)
+	fname=$(echo "$line" | cut -d' ' -f3-)
+
+	if [[ "$action" != "new" ]]; then
+		continue
+	fi
+
+	if [[ -d "$fname" ]]; then
+		cd "$fname" >/dev/null 2>&1 || continue
+
+		# Directory listing
+		# If it's in a git repo, add a few git commands to the tag
+		if git status >/dev/null 2>&1; then
+#			printf "Gci Gpush " | 9p write acme/$winid/tag
+			printf "gitk gitgui " | 9p write acme/$winid/tag
+		fi
+
+		cd "$HOME"
+	else
+		# Regular file
+		(
+			case "$fname" in
+				*/-sqlite3) # doesn't work bc. acme doesn't log the name for win
+					printf '[Edit 0/^sqlite> /0,$d] :$ '
+					;;
+				*/-ipy*)
+					printf '[Edit 0/^>>> /0,$d] :$ '
+					;;
+				*.beancount)
+					printf '[fava $%%] :$ '
+					;;
+				*.md|*/guide)
+					printf "|fmt |Check "
+					;;
+				*.go)
+					printf "Lcomp Ldef Lrefs Lhov |a+ |a- "
+					;;
+				*/go.mod)
+					printf "Lws+ "
+					;;
+				*.py)
+					printf "Lcomp Ldef Lrefs Lhov |a+ |a- "
+					printf "[Edit ,x/	/c/    /] "
+					;;
+				*.ts)
+					printf "Lcomp Ldef Lrefs Lhov |a+ |a- "
+					printf "[Edit ,x/	/c/    /] "
+					;;
+				*/COMMIT_EDITMSG)
+					printf "|fmt "
+					;;
+			esac
+		) | 9p write acme/$winid/tag
+	fi
+done

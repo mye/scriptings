@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# crontab -e and add: * * * * *  /usr/bin/env > /home/USER/cronenv
+# runascron /path/to/cronenv 'echo $PATH'
+
+. "$1"
+exec /usr/bin/env -i "$SHELL" -c ". $1; $2"
+

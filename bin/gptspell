@@ -1,0 +1,26 @@
+#!/usr/bin/env rc
+# spelling corrector that shows plaintext word level diffs
+# needs wdiff installed and gptt (this dir) setup
+# use temp files since diff needs to seek
+
+inp=`{mktemp}
+out=`{mktemp}
+cat >>$inp
+text=`{cat $inp}
+
+cat <<PROMPT | gptt >>$out
+Correct text to standard English. Text with a ◊ character in front is important and should be kept. Leave text between quotes as is.
+
+Text: A dictonary is a valuble tool for writers. And yet modern dictionaries that come with popular operating systems ◊link["http://jsomers.net/blog/dictionar"]{have ben found} to be ◊em{"dry, funtional, almost buraucratically sapped of color or poop"}.
+
+Correction: A dictionary is a valuable tool for writers. However, modern dictionaries that come with popular operating systems ◊link["http://jsomers.net/blog/dictionar"]{have been found} to be ◊em{"dry, funtional, almost buraucratically sapped of color or poop"}.
+
+Text: $text
+Correction:
+PROMPT
+
+cat $out
+echo -n '----'
+wdiff $inp $out
+
+rm $inp $out

@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+
+#export SHELL="bash"
+#export acmeshell="bash"
+#export BROWSER=safari
+export tabstop=4
+export TERM=dumb
+export PAGER=nobs
+
+# Path to 'a' script itself
+acme_bin_dir=$( cd $(dirname $0) && pwd )
+
+# Where are the plumber rules?
+#acme_plumber_rules="$acme_bin_dir/../plumbing"
+
+if [[ -z $(pgrep plumber) ]]; then
+	9 plumber
+fi
+
+if [[ -z $(pgrep fontsrv) ]]; then
+	9 fontsrv &
+fi
+
+#	cat "$acme_plumber_rules" "$PLAN9/plumb/basic" | 9p write plumb/rules
+
+
+export NODE_NO_READLINE=1
+
+
+exec acme -a -f /mnt/font/GoMono/12a/font -F /mnt/font/FiraCode/12a/font "$@" &
+
+sleep 1
+
+#acmefocused &
+
+#if [[ -z $(pgrep acme-lsp) ]]; then
+#	acme-lsp &
+#fi
+
+pkill acme-lsp
+acme-lsp &
+
+#if [[ -z $(pgrep -f adefaults) ]]; then
+#	bash adefaults &
+#fi
+
+pkill adefaults
+adefaults &

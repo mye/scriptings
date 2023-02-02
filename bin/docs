@@ -1,0 +1,6 @@
+#!/usr/bin/env rc
+# https://devdocs.io/
+# https://kapeli.com/mdn_offline
+#
+search = `{xargs}
+exec zeal $search

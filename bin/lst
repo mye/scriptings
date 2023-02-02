@@ -1,0 +1,14 @@
+#!/usr/bin/env rc
+# list open tickets made with `tickets'
+# produces a line with path to ticket and title for each open ticket
+# requires ripgrep
+
+tdir=$HOME/p/t
+
+flags=(ignore-case line-number no-heading with-filename)
+
+rg --$flags --color never -- 'status:open' $tdir | 9 sed 's/:.*//' | 9 awk '{
+	"9 grep title: "$0" | 9 sed s/title://" | getline title
+	printf "%s	%s\n", $0, title
+	title=""
+}'

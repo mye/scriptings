@@ -1,0 +1,6 @@
+#!/usr/bin/env rc
+flags=(ignore-case line-number no-heading with-filename)
+echo ripgrep: $*
+rg --$flags --color never -- $*
+#| 9 sed 's/:[ 	]+/: /'
+echo

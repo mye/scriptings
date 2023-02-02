@@ -1,0 +1,35 @@
+#!/usr/bin/env rc
+# KISS ticket system
+# To initalize: cd to tickets directory (must be inside a git repo).
+# echo 0 >numticks
+# Set tdir to ticket dir (pwd).  Use from acme by selecting ticket
+# text (first line becomes the title) and middle click >ticket
+
+tdir=$HOME/p/t
+cd $tdir
+
+numticks=`{cat numticks}
+nextnum = `{expr $numticks + 1}
+
+# I failed to find a way to read just one line from stdin w/o bourne shell.
+# awk '{print;exit}' truncates stdin and I don't know how to stop it.
+# Not my fault Tom Duff thought that `read' is "redundant or only marginally
+# useful" when he created rc?!?
+
+title=`{bash -c 'read line; echo "$line"'}
+
+# xxx if (test -z $title) try again if I accidentially select a blank line?
+
+cat <<TICKET > $nextnum
+ticket:$nextnum
+status:open
+title:$title
+----
+TICKET
+
+cat >>$nextnum
+echo $nextnum >numticks
+
+git add $nextnum numticks
+git commit -m 'ticket '^$nextnum^': '^$"title
+echo $tdir/$nextnum': '$"title

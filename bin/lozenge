@@ -1,0 +1,5 @@
+#!/usr/bin/env rc
+
+echo -n '◊tag{'
+cat
+echo -n '}'
