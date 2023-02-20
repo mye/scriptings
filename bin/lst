@@ -1,9 +1,9 @@
 #!/usr/bin/env rc
-# list open tickets made with `tickets'
+# list open tickets made with `ticket'
 # produces a line with path to ticket and title for each open ticket
 # requires ripgrep
 
-tdir=$HOME/p/t
+tdir=$HOME/t
 
 flags=(ignore-case line-number no-heading with-filename)
 

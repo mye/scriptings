@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
-
+export SHELL="rc"
 #export SHELL="bash"
 #export acmeshell="bash"
 #export BROWSER=safari
 export tabstop=4
+export NO_COLOR=1
 export TERM=dumb
 export PAGER=nobs
 

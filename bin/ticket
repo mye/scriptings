@@ -5,7 +5,7 @@
 # Set tdir to ticket dir (pwd).  Use from acme by selecting ticket
 # text (first line becomes the title) and middle click >ticket
 
-tdir=$HOME/p/t
+tdir=$HOME/t
 cd $tdir
 
 numticks=`{cat numticks}

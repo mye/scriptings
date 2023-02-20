@@ -1,3 +1,4 @@
 #!/usr/bin/env rc
 flags=(ignore-case line-number no-heading with-filename)
-exec rg --$flags --color never -- $*
+rg --$flags --color never -- $*
+echo

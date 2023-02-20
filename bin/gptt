@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
+# run in a python environment with at least:
+# pip install openai "python-dotenv[cli]"
 
 set -Eeuo pipefail
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
 
-exec condarun openai-python python "$script_dir/../openai/gptt.py"
+~/venv/openai/bin/python "$script_dir/../openai/gptt.py"

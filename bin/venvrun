@@ -1,17 +1,16 @@
 #!/usr/bin/env bash
 
-if [[ ! -d ./.venv ]]; then
-	echo "venv environment $(pwd)/.venv not found"
+if [[ ! -d "$1" ]]; then
+	echo "venv environment $1 not found"
 	exit 1
-
 fi
 
-. ./.venv/bin/activate
+. "$1/bin/activate"
 
+shift
 CMD=$@
-if [[ $@ == "" ]]; then
-	CMD=$SHELL
+if [[ "$CMD" != "" ]]; then
+	which "$CMD"
+	exec $CMD
 fi
 
-which "$CMD"
-exec $CMD
