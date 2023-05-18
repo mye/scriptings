@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# read a .env in the current directory and export environment variable into the shell
+
+cat .env | awk '!/^#.*/' | xargs

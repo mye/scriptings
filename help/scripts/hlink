@@ -1,0 +1,17 @@
+#!/bin/rc
+
+if(~ $#* 0) {
+	cat >/tmp/xhlink
+	link=`{cat /tmp/xhlink}
+	link=$"link
+}
+if not
+	link=$"*
+
+echo -n '<a href="'^$link^'">'
+if(~ $#* 0)
+	cat /tmp/xhlink
+if not
+	cat
+echo -n '</a>'
+rm -f /tmp/xhlink

@@ -1,0 +1,110 @@
+#!/usr/bin/env rc
+
+. 9.rc
+. $PLAN9/lib/acme.rc # ~/9/lib/acme.rc
+
+
+
+MAX_PROMPT_TOKEN_LENGTH = 4096
+CHARS_PER_TOKEN = 4
+MAX_PROMPT_CHAR_LENGTH = 16384
+# character units
+PROMPT_PREAMBLE_LENGTH = 2000
+MAX_HUMAN_INPUT = 2000
+MAX_RECIPE_INPUT = 2000
+MAX_CURRENT_FILE = 4000
+MAX_RECIPE_SURROUNDING = 10
+SOLUTION_LENGTH = 4000
+MAX_AVAILABLE_PROMPT_LENGTH = `{expr $MAX_PROMPT_CHAR_LENGTH - $PROMPT_PREAMBLE_LENGTH - $SOLUTION_LENGTH}
+
+
+
+#If there is a selection, the method gets the current timestamp and
+#truncates the selected text, as well as the text before and after
+#the selection, based on pre-defined constants. It also normalizes the
+#programming language name based on the file name.
+#
+#The method then creates a prompt message using the truncated and formatted
+#text, and a display text with the original selection. Finally, it returns
+#a new Interaction object with the generated prompt, display text, and
+#context messages based on the selection and codebase context.
+
+fn min0{
+	echo '[0]sM '$1' '$2' - d 0 >M p' | dc
+}
+oifs=$ifs
+
+#fn truncate{cut -c1-$1}
+fn truncate{head -c$1}
+
+
+fn capture{
+	oifs=$ifs
+	ifs=()
+	exec $*
+	ifs=$oifs
+}
+
+
+addr=<>{9p rdwr acme/$winid/addr} {
+	9 read $addr(1)>/dev/null
+	echo 'addr=dot' | 9p write acme/$winid/ctl
+	echo . >$addr(2)
+	sel_addr=`{9 read $addr(1)}
+	ifs=(); sel_text=`{9p read acme/$winid/xdata}; ifs=$oifs
+}
+
+
+prev=`{min0 $sel_addr(1) $MAX_RECIPE_SURROUNDING}
+
+
+addr=<>{9p rdwr acme/$winid/addr} {
+	9 read $addr(1)>/dev/null
+	echo -n '#'$prev',#'$sel_addr(1) | 9p write acme/$winid/addr
+	ifs=(); previous_text=`{9p read acme/$winid/xdata}; ifs=$oifs
+}
+
+addr=<>{9p rdwr acme/$winid/addr} {
+	9 read $addr(1)>/dev/null
+	echo -n '#'$sel_addr(2)',' | 9p write acme/$winid/addr
+	ifs=(); following_text=`{9p read acme/$winid/xdata | truncate $MAX_RECIPE_SURROUNDING}; ifs=$oifs
+}
+
+
+#echo $previous_text
+#echo ---
+#echo $following_text
+#echo ---
+
+filepath=`{winread tag | awk '{print $1;exit;}'}
+filetype=`{/usr/bin/file -b $filepath | cut -f1 -d,}
+
+txtchat <<! | chatgpt | gpttxt
+PLAN Explain the following $filetype at a high level. Only include details that are essential to an overall understanding of what's happening in the code
+USER
+$sel_text
+!
+
+
+
+#; cmd="file -b "/home/lo/mye/scriptings/bin/Explain ; cmd | getline filetype; close(cmd); print filetype}'
+
+
+#9p rdwr acme/$winid/addr >/dev/null
+#echo 'addr=dot' | 9p write acme/$winid/ctl
+#9p read acme/$winid/xdata
+
+#addr=`{9p read acme/$winid/addr}
+
+#addr=<>{9p rdwr acme/$winid/addr} {
+#	#9 read $addr(1)>/dev/null
+#	echo 'addr=dot' | 9p write acme/$winid/ctl
+#	#echo . >$addr(2)
+#	#9 read $addr(1)
+#	9p read acme/$winid/xdata
+#}
+
+#echo addr=dot | 9p write acme/$winid/ctl
+#echo cleartag | 9p write acme/$winid/ctl
+#9p read acme/$winid/addr
+echo

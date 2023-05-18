@@ -1,0 +1,3 @@
+#!/usr/bin/env rc
+ENTR_INOTIFY_WORKAROUND=1
+exec entr -n $*

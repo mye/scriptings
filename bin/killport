@@ -1,0 +1,12 @@
+#!/usr/bin/env rc
+
+# multiple PIDs?
+# killport() { lsof -ti :"$1" | xargs kill -9; }
+
+#    fuser -k 8080/tcp       # kill processes with TCP :8080 open, IPv4 and IPv6
+#    fuser -k -6 8080/tcp    # same but IPv6 only
+#    fuser -k 8080/udp       # UDP instead of TCP
+
+# https://github.com/sixarm/port-to-process
+
+kill `{lsof -t -i:$1}

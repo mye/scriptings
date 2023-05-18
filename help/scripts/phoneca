@@ -1,0 +1,10 @@
+#!/bin/rc
+
+tail -1 -f  /usr/rsc/call.log | awk 'NR==1{next}
+	NF != 7 {next}
+	$5 == "i-" || $5 == "ip" {
+		s = sprintf("(echo ''\n%s''; tel %s) | upasname=phoneca mail rsc",
+			$0, $NF);
+		system(s);
+	}'  
+

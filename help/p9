@@ -1,0 +1,78 @@
+Tree enumerator (simple "find") useful for many purposes
+fn f { du -a $* | sed 's/^.*    //g' }    <-- that whitespace is a tab
+
+List out the sources in the current directory.
+fn s { lc *.[chsyl] }
+
+Grep, but force listing of filename:lineno so you can click on an entry to jump to it in an editor.
+fn gn { grep -n $* /dev/null }
+
+gn on all sources in the current directory
+fn g { grep -n $* *.[chsyl] /dev/null }
+
+at specific-time           while (! ~ (`{ date }) (specific-time)); commands
+
+wget http://foo/bar        hget http://foo/bar > bar
+                           (progress bar, -t for ascii) hget -v -o bar http://foo/bar |[2] aux/statusbar [-t] 'downloading'
+
+cut                        awk -F ...
+expr                       hoc -e
+
+find                       du -a | grep pattern
+                           grep pattern `{du -a root}
+   -name                   du -a root | grep name
+   pattern in a file       grep -n pattern `{du -a root | awk '{print $2}'}
+   -exec cp '{}' x ';'     cp `{ du -a | grep pattern } x
+
+getopt                     getflags(8)
+
+groff -l                   troff | lp
+
+grops                      dpost - see troff(1)
+
+head                       sed 10q
+
+less
+more                       p
+
+tree                       du $* | awk '{print $2}' | sort | sed 's/[^\/]+\//	/g'
+
+xditview                   troff | page
+                           troff | proof
+
+
+
+
+'chk: Grep for lines with unmatched single quotes (as bedevil my own rc scripts). Note that because of rc's quoting conventions, it must be invoked as something like ''''chk.
+
+Clean: Intended to be executed under acme, Clean deletes all clean windows matching a regular expression pattern (default .), except +Errors, Mail, and win windows.
+
+hbold, hitalic, hcom, hlink, htrow: Pipe text through these in acme or sam, to bolden it, italicize it, comment it out, turn it into a hyperlink, or put it in a table row by itself. If hlink is given no argument, it uses the passed text as the link. (I think I picked the concept up from a wily manual or user.)
+
+long: Expand tabs to 8 characters, and then print any lines longer than 80 characters. Useful before printing code.
+
+q: Prefix a string to each line of its input. Useful for inserting % or // comments in the editors. The default string is a single tab, so that with no arguments it functions as Acme's ind. Because it uses sed, the last line must include a newline or it will disappear.
+
+g, def: G, due to Rob Pike, does grep -n for a pattern in the named files, by default *.[ch]. The output is suitable for plumbing; it's not uncommon for most of my source windows to have g foo in the tag line, waiting to be executed.
+Def uses g to find the prototype of a function in a header file in the current directory or in the standard locations. It is especially useful with Acme's 2-1 chord.
+
+", "": " reprints the command lines beginning with its arguments; by default it reprints the last command line. They are printed in chronological order, oldest first. "" executes the most recent command found by ". (Originally lifted from Tom Killian; improvements by Rob Pike.)
+
+d2h, h2d: Decimal to hexadecimal and back. Simple, but I use them every day.
+
+mu: Audio volume control. mu what num sets what to num but prints the old setting. The default arguments are audio 0, so that mu mutes the sound card but prints a command that can be sent to unmute it.
+
+rlogin: Just to show that you can do it in a shell script. Con -r and ssh are much better.
+
+uptime: Print how long a system has been running.
+
+phoneca: Watch the tfone call log for unanswered calls and send mail about them.
+
+tar: This is horribly not Plan 9-like, but I really like the GNU tar's z option, which causes it to read and produce gzipped tar files rather than tar files. This script is a front end for the real tar.
+
+tt: Send a ^t^t foo sequence in a con session. Ctl-\, !tt r, for instance. (Picked up from David Hogan)
+watchfd: Present a bar graph of where a process is in processing a (usually large) file. watchfd proc prints the things that process (which may be a name or number) has open and could be watched. watchfd pid fd [title] actually puts up the graph. Only useful when the total size can be gleaned from ls -l on the open file. Needs bargraph.c below.
+
+df: Display free disk space on local kfs file systems.
+
+fromdos, todos, nocr, crlf: Fromdos and todos remove or add carriage-returns from the ends of the lines in the named files. They edit the files in place. Nocr and crlf are their filter equivalents, which behave like cat except for the removal or addition of carriage returns.

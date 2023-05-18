@@ -1,0 +1,4 @@
+#!/usr/bin/env python3
+from sys import stdin, stdout
+from textwrap import dedent
+stdout.write(dedent(stdin.read()))

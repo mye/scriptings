@@ -1,0 +1,49 @@
+#!/bin/rc
+
+# produce a zero byte on stdout
+fn zero {
+	dd -if /dev/zero -count 1 -bs 1 >[2]/dev/null
+}
+
+# translate a network address
+fn cslookup {
+	echo $1 | ndb/csquery >[2]/dev/null |tr -d '>'
+}
+
+# translate the network address for rlogin
+x=`{cslookup net!$1!login}
+if(~ $#x 0){
+	echo couldn''t translate $1
+	exit 'unknown host'
+}
+clonefile=$x(1)
+dialstring=$x(2)
+
+# hold the clone file open to keep the connection ours
+<[4] $clonefile {
+	netdir=`{basename -d $clonefile} ^ / ^  `{cat /fd/4}
+
+	# write connect string to /net/tcp/N/ctl
+	echo connect $dialstring >$netdir/ctl || exit 'cannot connect'
+
+	# proxy data from remote system
+	cat $netdir/data | tr -d '' &
+
+	# must do bsd authentication protocol at beginning.
+	{
+		zero
+	&&	echo -n $user	# local user
+	&&	zero
+	&&	echo -n $user	# remote user
+	&&	zero
+	&&	echo -n p9	# terminal type
+	&&	zero
+	} >$netdir/data || exit 'cannot talk bsd'
+
+	# proxy data to remote system from keyboard
+	# hold /dev/cons open to keep raw mode on
+	</dev/cons >/dev/consctl {
+		echo rawon 
+		cat >$netdir/data
+	} 
+}

@@ -1,0 +1,56 @@
+#!/usr/bin/env rc
+# https://help.kagi.com/kagi/api/summarizer.html
+
+summary_type=summary	# -t summary | takeaway
+#target_language=EN		#
+
+# Agnes (default): Formal, technical, analytical summary
+# Daphne: Informal, creative, friendly summary
+model=agnes # -m
+
+opt=()
+while(~ $1 -*){
+	switch($1){
+	case -m
+		model=$2
+		shift
+	case -u
+		url=$2
+		shift
+	case -t
+		summary_type=$2
+		shift
+    case -*
+        opt=($opt $1)
+    }
+	shift
+}
+
+if(~ $KAGI_API '' ()){
+	echo set KAGI_API #>[1=2]
+	exit 2
+}
+
+if(~ $url '' ()){
+	ifs=() json_text=`{jq -Rsa .}
+
+	if(~ $json_text '' ()){
+		echo $0': No input messages'
+		exit 2
+	}
+
+	curl -XPOST https://kagi.com/api/v0/summarize \
+		-H 'Content-Type: application/json' \
+		-H 'Authorization: Bot '^$KAGI_API \
+		--data @- <<! # >[2]/dev/null
+}
+{"engine": "$model",
+"summary_type": "$summary_type",
+"text": $json_text}
+!
+if not curl --get \
+	-H 'Authorization: Bot '^$KAGI_API \
+	--data-urlencode engine=$model \
+	--data-urlencode url=^$url \
+	--data-urlencode summary_type=^$summary_type \
+	https://kagi.com/api/v0/summarize #>[2]/dev/null

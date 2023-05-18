@@ -1,0 +1,23 @@
+#!/bin/rc
+
+what=audio
+if(~ $1 audio synth cd line mic speaker treb bass speed) {
+	what=$1
+	shift
+}
+
+old=`{cat '#A'/volume |grep '^'$what | sed 's/.* //'}
+new=0
+if(~ $#* 1) {
+	if(~ $1 +* -*)
+		new=`{echo $old $1 | hoc}
+	if not
+		new=$1
+}
+
+if(~ $what audio)
+	echo mu $old
+if not
+	echo mu $what $old
+
+echo $what' '$new >'#A'/volume

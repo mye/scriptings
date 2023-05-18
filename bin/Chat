@@ -1,0 +1,27 @@
+#!/usr/bin/env rc
+. 9.rc
+. $PLAN9/lib/acme.rc
+
+fn event{
+	switch($1$2){
+	case Ml ML	# button 3 in tag or body
+		winwriteevent $*
+	case Mx # button 2 in tag
+		if(~ $9 Complete) send
+		if not winwriteevent $*
+	}
+}
+
+fn send{
+	winread body
+}
+
+fn chat{
+	newwindow
+	winname Chat
+	#winctl get
+	echo -n 'user aide system [Complete]' | winwrite tag
+	wineventloop
+}
+
+chat

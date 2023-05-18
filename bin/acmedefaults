@@ -24,7 +24,7 @@
 		# Regular file
 		(
 			case "$fname" in
-				*/-sqlite3) # doesn't work bc. acme doesn't log the name for win
+				*/-sqlite3) # doesn't work bc. acme doesn't log the name for `win`
 					printf '[Edit 0/^sqlite> /0,$d] :$ '
 					;;
 				*/-ipy*)
@@ -34,21 +34,21 @@
 					printf '[fava $%%] :$ '
 					;;
 				*.md|*/guide)
-					printf "|fmt |Check "
+					# sudo gem install mdl
+					echo -n " |fmt [mdl $%] [Edit ,x/	/c/    /] "
 					;;
 				*.go)
-					printf "Lcomp Ldef Lrefs Lhov |a+ |a- "
+					#printf "Lcomp Ldef Lrefs Lhov |a+ |a- "
 					;;
 				*/go.mod)
 					printf "Lws+ "
 					;;
 				*.py)
-					printf "Lcomp Ldef Lrefs Lhov |a+ |a- "
-					printf "[Edit ,x/	/c/    /] "
+					printf " |a+ |a- Beaupy |Toggle Gpy"
 					;;
 				*.ts)
-					printf "Lcomp Ldef Lrefs Lhov |a+ |a- "
-					printf "[Edit ,x/	/c/    /] "
+#					printf "Lcomp Ldef Lrefs Lhov |a+ |a- "
+#					printf "[Edit ,x/	/c/    /] "
 					;;
 				*/COMMIT_EDITMSG)
 					printf "|fmt "

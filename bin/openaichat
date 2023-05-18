@@ -1,0 +1,48 @@
+#!/usr/bin/env rc
+# Expects a json list with valid chat completion messages on stdin
+#temperature=1 # -t 0-2
+#top_p=1       # -p 0-1
+n=1           # -n
+#stop=()       # -s
+max_tokens=() # -t
+model=gpt-3.5-turbo # -m
+
+opt=()
+while(~ $1 -*){
+	switch($1){
+	case -m
+		model=$2
+		shift
+	case -n
+		n=$2
+		shift
+	case -t
+		max_tokens=$2
+		shift
+    case -*
+        opt=($opt $1)
+    }
+	shift
+}
+
+ifs=() msgs=`{cat}
+
+if(~ $msgs '' ()){
+	echo $0': No input messages'
+	exit 1
+}
+
+if(~ $OPENAI_API_KEY '' ()){
+	if(~ `{pwd} $home/ailab/*) . $home/ailab/.env
+	if not . $home/.env
+}
+
+curl https://api.openai.com/v1/chat/completions \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer '^$OPENAI_API_KEY \
+  --data @- <<! >[2]/dev/null
+{"model": "$model",
+ "n": $n,
+ "messages": $msgs
+}
+!

@@ -1,0 +1,30 @@
+#!/usr/bin/env rc
+# Hack.
+# record 30s audio file, transcribe with whisper into current window, delete the file
+nl='
+'
+
+addr=<>{9p rdwr acme/$winid/addr} {
+	9 read $addr(1)>/dev/null
+	echo 'addr=dot' | 9p write acme/$winid/ctl
+	echo . >$addr(2)
+	ifs=(' ') sel_addr=`{9 read $addr(1)}
+	ifs=() sel_text=`{9p read acme/$winid/xdata}
+}
+
+out=`{mktemp --suffix=.wav}
+timeout 29 parecord --rate=16000 $out
+
+echo 'Recording finished, transcribing ...'
+
+cd /home/lo/local/whisper.cpp
+ifs=() transcr=`{./main -f $out -m models/ggml-base.en.bin -nt -l en}
+
+addr=<>{9p rdwr acme/$winid/addr} {
+	9 read $addr(1)>/dev/null
+	echo . >$addr(2)
+	echo -n '#'^$sel_addr(2) | 9p write acme/$winid/addr
+	echo $nl $transcr | 9p write acme/$winid/data
+}
+
+rm $out

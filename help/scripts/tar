@@ -1,0 +1,26 @@
+#!/bin/rc
+
+tar=/$objtype/bin/tar
+
+if(~ $1 *z*) {
+	a=$1
+	shift
+	a=`{echo $a | tr -d z}
+	file=()
+	if(~ $a *f) {
+		a=`{echo $a | tr -d f}
+		file=$1
+		shift
+	}
+	if(~ $a c*) {
+		if(~ $#file 0)
+			$tar $a $* | gzip -9
+		if not
+			$tar $a $* | gzip -9 >$file
+	}
+	if not {
+		cat $file | gunzip | $tar $a $*
+	}
+}
+if not
+	$tar $*

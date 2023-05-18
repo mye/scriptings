@@ -1,0 +1,16 @@
+#!/usr/bin/env rc
+# Acmewatch: $1 is Acme window id, rest is command to be evaluated
+# Update window with winid $1 with output of command
+
+. 9.rc
+. $PLAN9/lib/acme.rc # ~/9/lib/acme.rc
+
+winid=$1
+shift
+cmd=$"*
+
+addr=<>{9p rdwr acme/$winid/addr} {
+	9 read $addr(1)>/dev/null
+	echo , >$addr(2)
+	eval $cmd >[2=1] | winwrite data
+}

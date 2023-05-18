@@ -1,0 +1,4 @@
+#!/usr/bin/env rc
+# Format the JSON format response from chatgpt into readable plaintext
+
+jq -r '.choices[].message.content | "AIDE\n\(.)"'

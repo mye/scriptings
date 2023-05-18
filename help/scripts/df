@@ -1,0 +1,39 @@
+#!/bin/rc
+
+rfork e
+
+fn h2d {
+	echo 'ibase=16;' print `{echo $1|tr a-z A-Z} |bc
+}
+
+fn swap {
+	echo $1 | sed 's/(..)(..)(..)(..)/\4\3\2\1/'
+}
+
+fn df {
+	echo -n $1 ''
+	blksz=`{xd -c $1 |grep 110 |sed 1q |
+		sed 's/^.......   (.)  (.)  (.)  (.).*/\1\2\3\4/'}
+	info=`{dd -bs $blksz -iseek 1 -count 1 < $1 >[2]/dev/null | xd -l | sed 1q}
+	total=$info(3)
+	free=$info(4)
+	if(~ $cputype 386) {
+		total=`{swap $total}
+		free=`{swap $free}
+	}
+	total=`{h2d $total}
+	free=`{h2d $free}
+
+	totalb=`{hoc -e $total^'*'^$blksz}
+	freeb=`{hoc -e $free^'*'^$blksz}
+	echo $free / $total '*' $blksz '=' $freeb / $totalb
+}
+
+disk=`{ls /dev/sd??/fs /dev/sd??/other >[2]/dev/null}
+if(~ $#disk 0) {
+	echo no disk found
+	exit 'no disk'
+}
+
+for(i in $disk)
+	df $i

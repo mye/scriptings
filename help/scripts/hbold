@@ -1,0 +1,5 @@
+#!/bin/rc
+
+echo -n '<b>'
+cat
+echo -n '</b>'

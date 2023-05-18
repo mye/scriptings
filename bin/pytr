@@ -1,0 +1,13 @@
+#!/usr/bin/env rc
+
+f=$1
+#t=mktemp
+
+#cat $f | sed 's/^>>>(.*)/print\(\1\)/g' >$t
+NO_COLOR=1 ruff --ignore E501,F401,E731 $f
+
+
+
+if(~ $status 0 () '') python $*
+
+

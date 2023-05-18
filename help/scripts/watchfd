@@ -1,0 +1,31 @@
+#!/bin/rc
+
+fn watch {
+	pid=$1
+	fd=$2
+	file=`{cat /proc/$pid/fd | awk '$1=='^$fd^' {print $NF}'}
+	title=$3
+	sz=`{ls -l $file | awk '{print $6}'}
+	{
+		while(test -f /proc/$pid/fd) {
+			cat /proc/$pid/fd | awk '$1=='^$fd^' {printf("%d '^$sz^'\n", $6);}'
+			sleep 1;
+		}
+	} | bargraph $title
+}
+
+switch($#*) {
+case 1
+	for (i in `{ps|awk '$2=="'^$1^'" || $7=="'^$1^'" {print $2}'})
+		cat /proc/$i/fd | awk 'NF==7{printf("watchfd '^$i^' %d %s\n", $1, $7);}'
+case 2
+	pid=$1
+	fd=$2
+	file=`{cat /proc/$pid/fd | awk '$1=='^$fd^' {print $NF}'}
+	watch $pid $fd $file
+case 3
+	watch $1 $2 $3
+case *
+	echo 'usage: watchfd proc [fd] [title]' >[1=2]
+	exit usage
+}

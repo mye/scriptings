@@ -1,0 +1,17 @@
+#!/usr/bin/env rc
+
+ifs=() search=`{cat}
+if(~ $search '' ()){
+	echo $0': No input' #>[1=2]
+	exit 1
+}
+
+if(~ $KAGI_API '' ()){
+	echo set KAGI_API #>[1=2]
+	exit 1
+}
+
+echo --get \
+  -H 'Authorization: Bot '^$KAGI_API \
+  --data-urlencode q=^$search \
+  https://kagi.com/api/v0/search #>[2]/dev/null

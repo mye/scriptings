@@ -1,0 +1,10 @@
+#!/usr/bin/env rc
+
+NO_COLOR=1
+
+
+#black $filename
+
+isort . --check --diff
+
+ruff . --ignore E501

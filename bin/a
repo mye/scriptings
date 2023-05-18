@@ -1,50 +1,43 @@
-#!/usr/bin/env bash
+#!/usr/bin/env rc
 
-export SHELL="rc"
-#export SHELL="bash"
-#export acmeshell="bash"
-#export BROWSER=safari
-export tabstop=4
-export NO_COLOR=1
-export TERM=dumb
-export PAGER=nobs
+# source .env
 
-# Path to 'a' script itself
-acme_bin_dir=$( cd $(dirname $0) && pwd )
+dotenvs=()
+cwd=`{pwd}
 
-# Where are the plumber rules?
-#acme_plumber_rules="$acme_bin_dir/../plumbing"
+while(~ $cwd /home/*){
+    if(test -f $cwd/.env) dotenvs=($cwd/.env $dotenvs)
+    cwd=`{dirname $cwd}
+}
 
-if [[ -z $(pgrep plumber) ]]; then
-	9 plumber
-fi
+for(f in $dotenvs){
+    echo 'Sourcing '$f
+    . $f
+}
 
-if [[ -z $(pgrep fontsrv) ]]; then
-	9 fontsrv &
-fi
+wd=`{pwd}
+cd
 
-#	cat "$acme_plumber_rules" "$PLAN9/plumb/basic" | 9p write plumb/rules
+# start acme with project dump
 
+dumpfile=$wd/data/acme.dump
 
-export NODE_NO_READLINE=1
-
-
-exec acme -a -f /mnt/font/GoMono/12a/font -F /mnt/font/FiraCode/12a/font "$@" &
-
-sleep 1
-
-#acmefocused &
-
-#if [[ -z $(pgrep acme-lsp) ]]; then
-#	acme-lsp &
-#fi
-
-pkill acme-lsp
-acme-lsp &
-
-#if [[ -z $(pgrep -f adefaults) ]]; then
-#	bash adefaults &
-#fi
-
-pkill adefaults
-adefaults &
+if(test -f $dumpfile){
+    echo 'Loading existing '$dumpfile
+    acme+ -l $dumpfile
+}
+if not{
+    echo 'Creating new '$dumpfile
+    mkdir -p $wd/data
+    cat <<! > $dumpfile
+    acme+ -l $dumpfile
+}
+/home/lo
+/mnt/font/FiraCode-Retina/12a/font
+/mnt/font/Iosevka-Fixed-Medium-Extended/12a/font
+  0.0000000  30.0000000  70.0000000
+w Newcol Kill Putall [Dump $dumpfile] Exit $wd Putall Tickets >ticket s/bin touch
+c          0 New Cut Paste Snarf Sort Zerox Delcol
+c          1 New Cut Paste Snarf Sort Zerox Delcol
+c          2 New Cut Paste Snarf Sort Zerox Delcol
+!

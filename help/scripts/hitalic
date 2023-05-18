@@ -1,0 +1,5 @@
+#!/bin/rc
+
+echo -n '<i>'
+cat
+echo -n '</i>'

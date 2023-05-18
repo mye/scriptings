@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 # run in a python environment with at least:
-# pip install openai "python-dotenv[cli]"
+# pip install openai "python-dotenv"
 
 set -Eeuo pipefail
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
 
-~/venv/openai/bin/python "$script_dir/../openai/gptt.py"
+# davinci should be a little creative
+temperature=${1:-0.3}
+
+# davinci has 4096 context tokens
+
+~/venv/openai/bin/python "$script_dir/../openai/gptt.py" text-davinci-003 4096 $temperature

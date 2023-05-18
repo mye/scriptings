@@ -1,0 +1,2 @@
+#!/usr/bin/env rc
+date '+%Y-%m-%d'

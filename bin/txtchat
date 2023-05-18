@@ -1,0 +1,17 @@
+#!/usr/bin/env python3
+# Format a textual conversation into a conversational api JSON format
+import json
+import re
+import sys
+
+gpt_role = {'PLAN': 'system', 'USER': 'user', 'AIDE': 'assistant'}
+tokens = '|'.join(gpt_role)
+pattern = re.compile(f'^({tokens})[\n \t]', re.MULTILINE|re.DOTALL)
+text = sys.stdin.read()
+utterances = [s for s in pattern.split(text) if s != '' and s != '\n']
+messages = [{'role': gpt_role[role], 'content': content.rstrip()}
+	for role, content
+	in zip(utterances[::2], utterances[1::2])
+]
+
+json.dump(messages, sys.stdout)

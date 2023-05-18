@@ -1,0 +1,4 @@
+#!/usr/bin/env rc
+# Format the JSON format answers
+
+jq -r '.choices[].message.content | "\n\"\"\"\n\(.)\n"'

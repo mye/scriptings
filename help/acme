@@ -1,0 +1,29 @@
+To search backwards for 'foobar' right-click on:
+      :-/foobar
+
+Selection tricks:
+	Press Esc to select the last typed text, press Esc again to delete any selected text.
+	To select the whole file execute: Edit ,
+	If you are lazy, you can "look" for :,
+
+To find out the current line number execute: Edit =
+
+Acme cd to keep the tag line up to date:
+	fn cd { builtin cd $* && awd $sysname }
+
+A function to clear a "win" session in an acme window.
+	fn winclear {
+	echo -n Edit ,d > /dev/acme/body
+	echo -n /Edit ,d/ > /dev/acme/addr
+	echo -n 'dot=addr' > /dev/acme/ctl
+	cat /dev/acme/addr | awk '{printf("MX%s %s\n", $1, $2)}' > /dev/acme/event
+	}
+
+To execute rc functions defined in your profile, prefix the function name with a semicolon. This will force acme to use rc to interpret the command.
+
+^U Delete from cursor position to start of line
+^W Delete the word to the left of the cursor
+^H Delete the character to the left of cursor (same as backspace)
+
+To make scrolling with the mouse wheel faster, you can set the "mousescrollsize" environement var in your profile to the number of lines you want to scroll, the default is 1 but a value of 4 might be more convenient.
+

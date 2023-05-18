@@ -1,0 +1,17 @@
+#!/usr/bin/env rc
+
+ifs=()
+inp=`{cat}
+
+if(~ `{pwd} $home/ailab/*) model=gpt-4
+if not model=gpt-3.5-turbo
+
+txtchat <<! | openaichat -m $model -n 1 | fmtanswers
+PLAN Convert english descriptions and python code fragments into correct Python 3. The user provides descriptions and code fragments or pseudocode and you reply with Python 3 code which implements the intended functionality. Prefer writing code in a functional style. Use tabs instead of spaces to indent code. If the description starts with an indentation, apply this level of indentation to all code you generate.
+USER
+	increase each value in list lst by one
+AIDE
+	map(lambda x: x+1, lst)
+USER
+$inp
+!

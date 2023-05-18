@@ -1,0 +1,2 @@
+#!/usr/bin/env rc
+MANWIDTH=80 man $*

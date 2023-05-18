@@ -1,0 +1,4 @@
+#!/usr/bin/env rc
+nl='
+'
+tr -d ' 	'$nl

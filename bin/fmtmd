@@ -1,0 +1,2 @@
+#!/usr/bin/env rc
+cmark --smart --width 80 --to commonmark $*

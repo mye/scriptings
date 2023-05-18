@@ -1,0 +1,5 @@
+#!/bin/rc
+
+echo -n '<!-- '
+cat
+echo -n ' -->'

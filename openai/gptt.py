@@ -7,38 +7,37 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-model = "text-davinci-003"
-MAX_TOK = 4096  # davinci has 4096 context tokens
-MIN_TOK = 128 # minimal tokens we allow
+assert len(sys.argv) >= 5, "Must call with model_name context_length temperature max_tok [stop, ...]"
+_, model_name, context_length, temperature, max_tokens, *stop_words = sys.argv
+context_length, temperature, max_tokens = int(context_length), float(temperature), int(max_tokens)
+
+assert len(stop_words) <= 4, "Can't provide more than 4 stop sequences"
+
 api_key = os.getenv('OPENAI_API_KEY')
 assert api_key
 openai.api_key = api_key
 
-# about four characters per token
-
+# about 4 characters per token
 # XXX: how many chars should be read?
 # Some endpoints have a shared maximum of 2048 tokens
 # prompt tokens plus max_tokens cannot exceed the model's context length
-
 # don't read prompts longer than half the context length
-prompt = sys.stdin.read(MAX_TOK // 2 * 4)
-#prompt = open('').read()
+# XXX: print warning if input was truncated
 
-# XXX: print warning if input was truncated?
+prompt = sys.stdin.read(context_length * 4) # should be upper bound for chars to read
 
-n_prompt_tokens = len(prompt) // 4
+# The max_tokens provided as an argument is easier to estimate as the maximal
+# number of tokens for the answer, excluding the prompt
+max_answer_tokens = len(prompt) // 4 + max_tokens
 
-# XXX: assume we want to cap output at max X times the input prompt length
-# I don't know which proportion is right
-
-n_tokens = min(MAX_TOK, 3 * n_prompt_tokens + MIN_TOK)
+assert max_answer_tokens <= context_length, "prompt length + answer length don't fit in the models context"
 
 try:
     response = openai.Completion.create(
-        model=model,
+        model=model_name,
         prompt=prompt,
-        temperature=0,
-        max_tokens=n_tokens,
+        temperature=temperature,
+        max_tokens=max_answer_tokens,
         top_p=1.0,
         frequency_penalty=0.0,
         presence_penalty=0.0

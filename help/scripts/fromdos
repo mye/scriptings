@@ -1,0 +1,7 @@
+#!/bin/rc
+
+for(i) {
+echo ',s///g
+w
+q' | ed $i >/dev/null
+}

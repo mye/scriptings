@@ -1,0 +1,8 @@
+#!/usr/bin/env rc
+ifs=() txt=`{cat}
+if(~ $txt '' ()){
+	txt='no text selected!'
+}
+tts=/home/lo/mambaforge/envs/whisper/bin/tts
+$tts --text $txt --model_name tts_models/en/ljspeech/overflow --out_path /dev/stdout >[2]/dev/null | paplay
+exit 1

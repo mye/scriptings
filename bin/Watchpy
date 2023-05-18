@@ -1,0 +1,28 @@
+#!/usr/bin/env rc
+. 9.rc
+. $PLAN9/lib/acme.rc # ~/9/lib/acme.rc
+
+fn event{
+	switch($1$2){
+	case MX Ml ML
+		winwriteevent $*
+	case Mx
+		winwriteevent $*
+	}
+}
+
+tag=`{winread tag}
+filename=$tag(1)
+newwindow
+winname `{dirname $filename}^'/-'^`{basename $filename}
+#echo name `{dirname $filename}^'/-'^`{basename $filename} | winctl
+
+{echo $filename | wslentr Acmewatch $winid pytr $filename $*}&
+pid_entr=$apid
+
+fn sigexit{
+	pkill -g $pid_entr
+}
+
+#winctl get
+wineventloop

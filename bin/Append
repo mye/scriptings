@@ -1,0 +1,25 @@
+#!/usr/bin/env rc
+# Append - append stdin to active Acme window after current selection
+# Must be run from within Acme
+
+. 9.rc
+. $PLAN9/lib/acme.rc # ~/9/lib/acme.rc
+
+addr=<>{9p rdwr acme/$winid/addr} {
+	9 read $addr(1)>/dev/null
+	echo 'addr=dot' | 9p write acme/$winid/ctl
+	echo . >$addr(2)
+	ifs=(' ') sel_addr=`{9 read $addr(1)}
+	ifs=() sel_text=`{9p read acme/$winid/xdata}
+}
+
+ifs=() txt=`{cat}
+nl='
+'
+
+addr=<>{9p rdwr acme/$winid/addr} {
+	9 read $addr(1)>/dev/null
+	echo . >$addr(2)
+	echo -n '#'^$sel_addr(2) | 9p write acme/$winid/addr
+	echo $txt | 9p write acme/$winid/data
+}

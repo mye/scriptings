@@ -1,0 +1,5 @@
+#!/bin/rc
+
+echo '<tr><td>'
+cat
+echo '</td></tr>'

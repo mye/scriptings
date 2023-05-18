@@ -1,0 +1,27 @@
+#!/usr/bin/env rc
+# Chap: chat append - read txt chat from stdin, send to openai, append to acme window as txt chat
+# run as >Chap with PLAN/USER/AIDE style prompt from within Acme
+
+. 9.rc
+. $PLAN9/lib/acme.rc # ~/9/lib/acme.rc
+
+fn chap{
+	txtchat|openaichat $*|fmtchoices|Append
+}
+
+# could also check if stdin is empty
+
+addr=<>{9p rdwr acme/$winid/addr} {
+	9 read $addr(1)>/dev/null
+	echo 'addr=dot' | 9p write acme/$winid/ctl
+	echo . >$addr(2)
+	ifs=(' ') sel_addr=`{9 read $addr(1)}
+	ifs=() sel_text=`{9p read acme/$winid/xdata}
+}
+
+# if there is no selection select the whole body as the conversation
+
+if(~ $sel_text '')
+	9p read acme/$winid/body | chap $*
+if not
+	chap $*

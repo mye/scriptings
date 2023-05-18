@@ -1,0 +1,20 @@
+Local is in the plumbing rules as this :
+	type	is	text
+	data	matches	'Local (.*)'
+	plumb	to	none
+	plumb	start	rc -c $1
+So one can plumb a command and any adjustments to the namespace will be reflected across the same processes as covered by the instance of the plumber.
+
+Then you can plumb:
+
+       Local bind -c /n/unix/some/awfully/long/path/name /n/anything
+This is particularly useful if one wants to page something one has found in Acme.
+
+A little shell script, "local" completes the picture:
+
+       #!/bin/rc
+       plumb 'Local ' ^ $"*
+And /n/anything is immediately visible everywhere (including in cpu's shells under /mnt/term) and i can plumb files in it without any further hassle.
+
+This is great when constantly dealing with namespaces that come and go (and particularly since i can import namespaces directly from Inferno, which means it's easy to gateway across to Windows machines).
+

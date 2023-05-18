@@ -1,0 +1,6 @@
+#!/usr/bin/env rc
+# Toggle line or selection by commenting/uncommenting
+# XXX: implement for other languages than python
+# XXX: select line if selection is empty
+
+awk '{if ($0 ~ /^#/) {gsub(/^#/,"")} else if ($0 ~ /^.+/) {printf("#")} print}'

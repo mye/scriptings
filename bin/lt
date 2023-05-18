@@ -1,0 +1,2 @@
+#!/usr/bin/env rc
+9 du -a $* | 9 sed 's/^.*	//g'

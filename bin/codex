@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# run in a python environment with at least:
+# pip install openai "python-dotenv"
+
+#set -Eeuo pipefail
+script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
+msg() {
+  echo >&2 -e "${1-}"
+}
+die() {
+  local msg=$1
+  local code=${2-1} # default exit status 1
+  msg "$msg"
+  exit "$code"
+}
+
+IFS=' ' read -r -a params
+if [ -z "${params[0]}" ] || [ -z "${params[1]}" ] || [ -z "${params[2]}" ]; then
+    echo "Error: missing parameters: params: temp max_top [stop, ...]"
+    exit 1
+fi
+
+temperature=${params[1]}
+max_tok=${params[2]}
+stop_words=${params[@]:3}
+
+#echo $temperature
+#echo $max_tok
+#echo $stop_words
+
+# codex should not be creative, start at zero and increase by 0.1 if needed
+#temperature=${1:-0}
+
+# codex has 8000 context tokens
+
+echo
+
+~/venv/openai/bin/python "$script_dir/../openai/gptt.py" code-davinci-002 8000 $temperature $max_tok $stop_words
