@@ -1,0 +1,20 @@
+#!/usr/bin/env rc
+# Append - append lines from stdin to active Acme window after current selection
+# Must be run from within Acme
+
+. 9.rc
+. $PLAN9/lib/acme.rc # ~/9/lib/acme.rc
+
+
+
+fn read{
+    $1=`{awk '{print;exit}'}
+}
+
+
+addr=<>{9p rdwr acme/$winid/addr} {
+	while(read line){
+		echo $line | 9p write acme/$winid/body
+		sleep 1
+	}
+}

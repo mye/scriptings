@@ -1,0 +1,56 @@
+#!/usr/bin/env rc
+. 9.rc
+. $PLAN9/lib/acme.rc # ~/9/lib/acme.rc
+
+
+fn get_completion(){
+	llm_in=$1
+	echo $llm_in
+
+	addr=<>{9p rdwr acme/$winid/addr} {
+		9 read $addr(1)>/dev/null
+		echo 'addr=dot' | 9p write acme/$winid/ctl
+		echo . >$addr(2)
+		ifs=(' ') sel_addr=`{9 read $addr(1)}
+		ifs=() sel_text=`{9p read acme/$winid/xdata}
+	}
+	echo "$sel_text"
+
+	ifs=() completion=`{echo $sel_text \r >$llm_in}
+	echo "$completion"
+}
+
+
+
+cmd=$"*
+tag=`{winread tag}
+filename=$tag(1)
+newwindow
+winname $filename^' -Llama' #^$cmd
+
+llm=<>{llama} {
+	echo starting llama
+	llm_out = $llm(1)
+	llm_in = $llm(2)
+
+
+	fn event{
+		switch($1$2){
+		case Ml ML
+			winwriteevent $*
+		case Mx
+			winwriteevent $*
+		case MX
+			get_completion $llm_in
+		}
+	}
+
+
+	wineventloop
+
+}
+pid_llm=$apid
+
+fn sigexit{
+	pkill -g $pid_llm
+}
