@@ -1,0 +1,60 @@
+#lang pollen
+
+strace -e open,openat a -l acme_python |& grep Compose
+◊;(require pollen/unstable/pygments)
+
+◊(define (highlight lang . xs)
+   `(pre (code ((class ,(format "~a" lang))) ,@xs)))
+
+
+How to build a simple vector search app
+
+◊todo{explain vector search}
+
+http://jsomers.net/blog/dictionary
+https://github.com/websterParser/WebsterParser
+65M	dict.json which we ◊link[]{clean}
+
+◊highlight['python]{
+for x in range(3):
+    print x
+}
+
+◊highlight['bash]{
+for x in range(3):
+    print x
+}
+
+lllllllllll<<¸<<<<¸<<
+
+Compute the sentence embeddings
+
+Prepare an sqlite database for the dictionary
+
+Insert dictionary and embeddings into sqlite
+
+Search for matches with [ScaNN](https://github.com/google-research/google-research/tree/master/scann)
+Build the index
+
+
+Deploy on fly.io
+Packaging
+A simple flask API
+
+Try it now with
+
+◊highlight['bash]{
+curl ...
+}
+
+What did I learn?
+
+PyArrow tables and embeddings aren't a great fit
+I lost an afternoon fiddling
+Did it help me write this article?
+
+
+◊jobsearch{
+I'm looking for a job!
+}
+
