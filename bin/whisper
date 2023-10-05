@@ -1,0 +1,7 @@
+#!/usr/bin/env rc
+# Print audio transcription of the given sound file
+
+
+cd $home/local/whisper.cpp
+
+./main -m models/ggml-large-q5_0.bin --output-json -f $1

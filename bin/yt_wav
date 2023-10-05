@@ -1,0 +1,10 @@
+#!/usr/bin/env rc
+# Download youtube audio into 16kHz WAV
+# Requires pipx install yt-dlp
+
+temp_file=`{mktemp --suffix=.wav}
+#audio_url=`{yt-dlp -g -f bestaudio $1}
+#ffmpeg -i $audio_url -vn -acodec pcm_s16le -ac 1 -ar 44100 -f wav -y $temp_file
+
+yt-dlp -f bestaudio -o - $1 | ffmpeg -i pipe: -acodec pcm_s16le -ac 2 -ar 16000 -f wav -y $temp_file
+echo $temp_file

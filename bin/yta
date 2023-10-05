@@ -1,0 +1,7 @@
+#!/usr/bin/env rc
+# Download youtube URL's audio into temporary file
+# Requires pipx install yt-dlp
+
+temp_file=`{mktemp}
+yt-dlp --force-overwrites --quiet --verbose -f bestaudio -o $temp_file $1
+echo $temp_file

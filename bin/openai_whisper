@@ -1,0 +1,19 @@
+#!/usr/bin/env rc
+# Transcribe audio file using OpenAI Whisper API
+# openai_whisper $home/local/whisper.cpp/samples/jfk.wav
+
+prompt='Hello, welcome to my lecture.'
+
+#if (~ `{ls -l $1 | awk '{print $5}'} 26214400) {
+#    echo 'File is larger than 25 MB'
+#    exit 1
+#}
+
+curl --request POST \
+	-H 'Content-Type:  multipart/form-data' \
+	-H 'Authorization: Bearer '^$OPENAI_API_KEY \
+	--url https://api.openai.com/v1/audio/transcriptions \
+	--form file=@$1 \
+	--form model=whisper-1 \
+	--form prompt=$prompt \
+| jq -r .text

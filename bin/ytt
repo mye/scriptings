@@ -1,0 +1,6 @@
+#!/usr/bin/env rc
+# Get text transcribed from youtube video URL
+
+tube_audio=`{yta $1}
+opus_audio=`{speech_opus $tube_audio}
+openai_whisper $opus_audio
