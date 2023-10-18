@@ -1,0 +1,26 @@
+#!/usr/bin/env rc
+# spelling corrector that shows plaintext word level diffs
+# You must have wdiff installed and the llm command setup
+# uses mktemp as diff needs seek
+
+inp=`{mktemp}
+out=`{mktemp}
+cat >>$inp
+text=`{cat $inp}
+
+cat <<PROMPT | llm -m gpt-3.5-turbo >>$out
+Correct word spelling and grammar in the text between """ paragraph by paragraph.
+Ignore markdown markup.
+
+Text: """
+$text
+"""
+PROMPT
+
+echo
+echo
+
+wdiff -ns $inp $out
+
+#cat $out
+#rm $inp $out

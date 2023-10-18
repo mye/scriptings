@@ -1,0 +1,156 @@
+#!/usr/bin/env rc
+
+
+
+I don't know how to code, but I want to understand how this works. Explain the following code to me in a way that a non-technical person can understand. Always use Markdown with nice formatting to make it easier to follow. Organize it by sections with headers. Include references to the code as markdown code blocks in each section. The code:
+
+
+
+MAX_PROMPT_TOKEN_LENGTH = 4096
+PROMPT_PREAMBLE_LENGTH = 500
+MAX_HUMAN_INPUT_TOKENS = 500
+MAX_RECIPE_INPUT_TOKENS = 500
+MAX_CURRENT_FILE_TOKENS = 1000
+MAX_RECIPE_SURROUNDING_TOKENS = 500
+SOLUTION_TOKEN_LENGTH = 1000
+MAX_AVAILABLE_PROMPT_LENGTH = `{expr $MAX_PROMPT_TOKEN_LENGTH - $PROMPT_PREAMBLE_LENGTH - $SOLUTION_TOKEN_LENGTH}
+CHARS_PER_TOKEN = 4
+
+fn truncate{cut -c1-$1}
+
+#If there is a selection, the method gets the current timestamp and
+#truncates the selected text, as well as the text before and after
+#the selection, based on pre-defined constants. It also normalizes the
+#programming language name based on the file name.
+#
+#The method then creates a prompt message using the truncated and formatted
+#text, and a display text with the original selection. Finally, it returns
+#a new Interaction object with the generated prompt, display text, and
+#context messages based on the selection and codebase context.
+
+echo `{echo}
+        const languageName = getNormalizedLanguageName(selection.fileName)
+        const promptMessage = `Explain the following ${languageName} code at a high level. Only include details that are essential to an overal understanding of what's happening in the code.\n\`\`\`\n${truncatedSelectedText}\n\`\`\`\n${MARKDOWN_FORMAT_PROMPT}`
+        const displayText = `Explain the following code at a high level:\n\`\`\`\n${selection.selectedText}\n\`\`\``
+
+
+Interaction:
+return [...contextMessages, this.humanMessage, this.assistantMessage].map(toPromptMessage)
+
+A Message is an association of a speaker with text
+A ChatMessage is a Message with displayText, timestamp, contextFiles[]
+InteractionMessage extends Message displayText, timestamp, prefix
+
+CompletionParameters {
+    messages: Message[]
+    temperature: number
+    maxTokensToSample: number
+    topK: number
+    topP: number
+}
+
+const CODE_CONTEXT_TEMPLATE = `Use following code snippet from file \`{filePath}\`:
+\`\`\`{language}
+{text}
+\`\`\``
+
+export function populateCodeContextTemplate(code: string, filePath: string): string {
+    const language = path.extname(filePath).slice(1)
+    return CODE_CONTEXT_TEMPLATE.replace('{filePath}', filePath).replace('{language}', language).replace('{text}', code)
+}
+
+const MARKDOWN_CONTEXT_TEMPLATE = 'Use the following text from file `{filePath}`:\n{text}'
+
+export function populateMarkdownContextTemplate(markdown: string, filePath: string): string {
+    return MARKDOWN_CONTEXT_TEMPLATE.replace('{filePath}', filePath).replace('{text}', markdown)
+}
+
+
+export function getContextMessageWithResponse(text: string, fileName: string): ContextMessage[] {
+    return [
+        { speaker: 'human', text, fileName },
+        { speaker: 'assistant', text: 'Ok.' },
+    ]
+}
+
+Explain the following typescript code at a high level. Only include details that are essential to an overall understanding of what's happening in the code
+This is a TypeScript code that defines a class
+called CodebaseContext and an interface called
+ContextSearchOptions. The CodebaseContext class has
+a constructor that takes three arguments: a string
+contextType that can be one of four values ('embeddings',
+'keyword', 'none', or 'blended'), an EmbeddingsSearch
+object or null, and a KeywordContextFetcher object.
+
+export class CodebaseContext {
+    constructor(
+        private contextType: 'embeddings' | 'keyword' | 'none' | 'blended',
+        private embeddings: EmbeddingsSearch | null,
+        private keywords: KeywordContextFetcher
+    ) {}
+
+The
+class has a public method called getContextMessages
+that takes a query string and an object of type
+ContextSearchOptions and returns a promise of an array
+of ContextMessage objects.
+
+public async getContextMessages(query: string, options: ContextSearchOptions): Promise<ContextMessage[]> {
+
+The getContextMessages method uses a switch statement
+on the contextType argument to determine which of two
+private methods to call: getEmbeddingsContextMessages or
+getKeywordContextMessages. These methods return an array
+of ContextMessage objects that are generated based on the
+query string and the search results provided by either
+the embeddings or keywords objects.
+
+switch (this.contextType) {
+	case 'blended': return this.embeddings ?
+		this.getEmbeddingsContextMessages(query, options)
+		:
+		this.getKeywordContextMessages(query, options)
+	case 'embeddings': return this.getEmbeddingsContextMessages(query, options)
+	case 'keyword': return this.getKeywordContextMessages(query, options)
+	default: return []
+
+
+	// We split the context into multiple messages instead of joining them into a single giant message.
+    // We can gradually eliminate them from the prompt, instead of losing them all at once with a single large messeage
+    // when we run out of tokens.
+    private async getEmbeddingsContextMessages(
+        query: string,
+        options: ContextSearchOptions
+    ): Promise<ContextMessage[]> {
+
+The getEmbeddingsContextMessages method first checks that
+the embeddings object is not null, and then calls its
+search method with the query string and the number of code
+and text results specified in the options argument.
+
+
+It
+then groups the results by file, reverses the order of
+the groups so that the least important results appear
+first, and generates a ContextMessage object for each
+group using either the populateMarkdownContextTemplate
+or populateCodeContextTemplate function, depending on
+the file type. The method returns an array of these
+ContextMessage objects.
+
+The getKeywordContextMessages method calls the
+getContext method of the keywords object with the
+query string and the number of code and text results
+specified in the options argument. It then generates
+a ContextMessage object for each result using the
+populateCodeContextTemplate function, and returns an
+array of these ContextMessage objects.
+
+The groupResultsByFile function is a helper function used
+by the getEmbeddingsContextMessages method to group search
+results by file and merge consecutive results that appear
+in the same file. It returns an array of objects, each
+of which has a fileName property and a results property
+that is an array of merged search result strings.
+
+

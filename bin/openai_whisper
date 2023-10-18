@@ -10,7 +10,7 @@ prompt='Hello, welcome to my lecture.'
 #}
 
 curl --request POST \
-	-H 'Content-Type:  multipart/form-data' \
+	-H 'Content-Type: multipart/form-data' \
 	-H 'Authorization: Bearer '^$OPENAI_API_KEY \
 	--url https://api.openai.com/v1/audio/transcriptions \
 	--form file=@$1 \
