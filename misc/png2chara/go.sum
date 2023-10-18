@@ -1,0 +1,6 @@
+github.com/chrisbward/go-png-chunks v0.0.0-20230712061038-556dcc1a758d h1:HKFE+XWyC0LY8ORQsP0fF1hwtj+ZY1mwNdkbR/dR1H4=
+github.com/chrisbward/go-png-chunks v0.0.0-20230712061038-556dcc1a758d/go.mod h1:PF0JOKDYG/DdOOUVWL6mDd6bwQHDYN5R18PnFsM6dqQ=
+github.com/chrisbward/go-png-chunks-chara v0.0.0-20230712102718-db836accd30f h1:w+bMfccPzgP1wKklmBqtb49thwsvS/Z/XLedc10WLE0=
+github.com/chrisbward/go-png-chunks-chara v0.0.0-20230712102718-db836accd30f/go.mod h1:lzo+6CYq5ijnZd8+7KNZtuMi1sETs5YWoEvWuhRH3+g=
+github.com/murkland/pngchunks v0.0.0-20220305211659-3f322c254e68 h1:m/83dMW0EpFweuOEJiHUsdtKwcqxdLj91LYM+i91zBg=
+github.com/murkland/pngchunks v0.0.0-20220305211659-3f322c254e68/go.mod h1:R10AASouoLqvXfvNYg87Ks/ScgVocSvO/sj173nU8nE=
