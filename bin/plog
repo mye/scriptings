@@ -1,0 +1,11 @@
+#!/usr/bin/env rc
+# Personal log, stardate 58402.7. Reflecting on the events of the past
+# week, I am reminded of the fragility of life and the importance of
+# cherishing every moment with those we love. I am grateful for the crew
+# of this ship and the sense of camaraderie we share
+
+# TODO: better way to escape newlines except the last?
+
+nl='
+'
+sed ':a;N;$!ba;s/\n/\\n/g' | multilog t $home/p/log/plog

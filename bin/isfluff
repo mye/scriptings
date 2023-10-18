@@ -1,0 +1,30 @@
+#!/usr/bin/env rc
+# Classify "conversational fluff" from conversation transcripts.
+# Outputs 1 if the input text is filler talk and 0 if it is not.
+
+# sets logit_bias to ensure tokens for 0 and 1
+
+nl='
+'
+
+text=`{cat | tr $nl ' '}
+
+res=`{sed -z '$ s/\n$//' <<PROMPT \
+| llm -m gpt-3.5-turbo-instruct --key $OPENAI_API_KEY -o max_tokens 1 -o logit_bias '{"15":100,"16":100}'}
+Analyse if the text between triple quotes reads like verbal padding and reply with "1" if it is and "0" otherwise:
+
+"""All right."""1
+"""Well, we're very excited to show you what we have today."""1
+"""It identifies badly performing features and prompts."""0
+"""So that's exactly right."""1
+"""Yeah, thank you, Eve."""1
+"""HDBSCAN stands for Hierarchical Density Based Spatial Clustering of Applications with Noise."""0
+"""So this is honestly one of my favorite algorithms out there."""1
+"""Let's focus back into this high spike."""0
+"""So gladly, UMAP does not behave this well."""0
+"""So I'm very excited to tell you about it."""1
+"""$text"""
+PROMPT
+
+if(~ $res 1) exit 0
+if not exit 1

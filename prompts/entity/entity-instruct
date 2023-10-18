@@ -1,0 +1,53 @@
+Intents Supported:
+- BookFlight
+- BookCar
+- BookHotel
+- None
+
+Entities Supported:
+- Origin - validation(must be a city)
+- Destination - validation(must be a city)
+- StartDate - validation(must be a date)
+- EndDate - validation(must be a date)
+
+Response Schema:
+{"type":"recognized","intent": "<intent>", "entities":[{"<name>":"<value>"}]}
+
+query:
+I'd like to book a flight for 4 to seattle
+
+program:
+1: is the query related to the list of supported intents? If not use the None intent and jump to line 7.
+2: recognize the queries intent and extract any entities.
+3: compare the recognized intent and entities with the list of supported intents and entities.
+4: were any additional intents or entities used?
+5: run each recognized entities validation rule.
+6: update the recognition results to only use available intents and entities if needed. Remove any invalid entities.
+7: return the results as JSON. Return the tag <response> just before the JSON.
+
+State each line of the program and show your work for performing that line.
+
+1: is the query related to the list of supported intents? If not use the None intent and jump to line 7.
+- The query is related to the BookFlight intent, so we do not use the None intent.
+
+2: recognize the queries intent and extract any entities.
+- The intent is BookFlight, and the entities are:
+  - Origin: none
+  - Destination: seattle
+  - StartDate: none
+  - EndDate: none
+
+3: compare the recognized intent and entities with the list of supported intents and entities.
+- The recognized intent and entities match the list of supported intents and entities.
+
+4: were any additional intents or entities used?
+- No, only the supported intent and entities were used.
+
+5: run each recognized entities validation rule.
+- Destination: seattle is a valid city, so it passes the validation rule.
+
+6: update the recognition results to only use available intents and entities if needed. Remove any invalid entities.
+- No update is needed, as the recognition results are valid and complete.
+
+7: return the results as JSON. Return the tag <response> just before the JSON.
+- <response>{"type":"recognized","intent": "BookFlight", "entities":[{"Destination":"seattle"}]}

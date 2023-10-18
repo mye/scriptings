@@ -1,0 +1,4 @@
+#!/usr/bin/env rc
+# Ensure newline at EOF
+
+awk 'BEGIN { prev="" } { if(NR>1) print prev; prev=$0 } END { printf "%s\n", prev }'

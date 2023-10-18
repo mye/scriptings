@@ -1,0 +1,5 @@
+#!/usr/bin/env rc
+nl='
+'
+tr $nl ' '
+echo

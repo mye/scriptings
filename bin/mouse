@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# First, reset the pointer so it runs on the default setting. This undoes whatever the window manager
+# has decided to mistakenly setup.
+xset m default
+
+# Select the mouse we are going to adjust settings for
+
+MOUSE='pointer:Razer Razer Abyssus 1800'
+
+# The Abyssus runs an 1800 CPI resolution sensor. Decelerate it to around 1000 CPI, in order to
+# match the Kinzu V3
+xinput set-prop "$MOUSE" "Device Accel Constant Deceleration" 1.5
+
+# Accel profile (2 = polynomial) — Pick a polynomial accel curve on which to place accel parameters.
+# If the pointer is precise, the polynomial curve is easier to control than a standard linear curve. So
+# by picking this curve, things end up being somewhat easier to work with.
+xinput set-prop "$MOUSE" "Device Accel Profile" 2
+
+# Velocity Scaling factor — Lower values means less accel kick in.
+# For the polynomial curve, and a fast 1800 CPI mouse, you don't need a whole lot here for things
+# to kick in. The modest setting is this
+xinput set-prop "$MOUSE" "Device Accel Velocity Scaling" 0.20
+
+# Adaptive Deceleration is set last. While the above settings all has to do with pointer speed,
+# this setting then controls the precision of the pointer. Values greater than 1.0 means we allow
+# the input system to decelerate the mouse by this extra factor.
+xinput set-prop  "$MOUSE" "Device Accel Adaptive Deceleration" 1.3
+

@@ -1,0 +1,2 @@
+#!/usr/bin/env rc
+llm -m gpt-3.5-turbo $"* --no-stream

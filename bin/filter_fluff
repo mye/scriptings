@@ -1,0 +1,42 @@
+#!/usr/bin/env rc
+# Given lines of text, output only lines that are not fluff.
+
+text=`{cat | ensurenl}
+
+cat <<PROMPT | llm -m gpt-3.5-turbo-instruct --key $OPENAI_API_KEY
+Ignore lines that read like conversational padding in the corresponding texts between """.
+
+Text 1 with possible conversational padding: """
+All right.
+Hi everyone.
+Welcome to our talk.
+Today we're going to give you a little bit of a behind the scenes of a new open source library.
+Specifically, we're going to go into the details of how to unravel embeddings using UMAP and HDBSCAN.
+But before we get started, let us introduce ourselves a little bit.
+So my name is Eve.
+I'm one of the founding engineers here.
+I've been working with embeddings for about the last year or so.
+And Adam, you want to introduce yourself? Sure.
+So thanks, Eve.
+My name is Adam.
+I've been working here for two years as a software engineer and data scientist.
+Cool.
+All right.
+Well, we're very excited to show you what we have today.
+But first, let's kind of reset the stage.
+Talk about what is ML observability.
+"""
+Extract 1: """
+Today we're going to give you a little bit of a behind the scenes of a new open source library.
+Specifically, we're going to go into the details of how to unravel embeddings using UMAP and HDBSCAN.
+I'm one of the founding engineers here.
+I've been working with embeddings for about the last year or so.
+I've been working here for two years as a software engineer and data scientist.
+Talk about what is ML observability.
+"""
+##
+Text 2 with possible conversational padding: """
+$text
+"""
+Extract 2: """
+PROMPT
