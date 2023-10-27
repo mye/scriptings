@@ -2,5 +2,5 @@
 # Print file path to webm with opus audio codec speech compression for the given audio file
 
 temp_file=`{mktemp --suffix=.webm}
-ffmpeg -i $1 -c:a libopus -b:a 24k -application voip -y $temp_file
+ffmpeg -hide_banner -loglevel warning -nostats -vn -i $1 -c:a libopus -b:a 24k -application voip -y $temp_file
 echo $temp_file
