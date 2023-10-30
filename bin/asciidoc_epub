@@ -1,0 +1,5 @@
+#!/usr/bin/env rc
+# convert asciidoc file to epub
+
+asciidoctor -b docbook -o - $1 \
+| pandoc -f docbook -t epub3 --embed-resources -o $1^.epub

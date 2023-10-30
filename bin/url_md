@@ -1,0 +1,14 @@
+#!/usr/bin/env rc
+# retrieve the HTML document at the given URL and write as narrow markdown
+
+echo '---
+title: foo
+lang: en
+---'
+
+echo
+
+postlight-parser $1 \
+| jq -r .content \
+| pandoc -f html -t markdown \
+| fmtn

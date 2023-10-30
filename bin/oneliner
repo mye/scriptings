@@ -1,0 +1,23 @@
+#!/usr/bin/env rc
+problem=`{cat | chomp}
+echo '----'
+chomp <<PROMPT | llm --key $OPENAI_API_KEY -m gpt-3.5-turbo-instruct -o max_tokens 4096 $*
+Your task is to write unix shell commands to solve problems. Recall relevant problems as examples, then proceed to solve the original problem.
+
+# Problem:
+$problem
+
+# Instruction:
+## Algorithms:
+Identify the core concepts or methods that would help me.
+
+## Tutorial:
+Write a useful tutorial about these concepts.
+
+## Example Problems:
+Provide three examples of relevant shell scripts and one-liners that use these ideas. Note that your examples should be distinct from each other and the initial problem. If possible, provide a different point of view in each example. For each problem, describe the problem, explain the solution in detail, and then write the correct shell commands or pipelines.
+
+## Shell invocations to solve the original problem:
+- Explanation of the solution:
+- Unix shell command or pipeline to solve the problem:
+PROMPT

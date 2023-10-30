@@ -1,0 +1,2 @@
+#!/usr/bin/env rc
+llm --key $OPENAI_API_KEY -m gpt-3.5-turbo-instruct $*

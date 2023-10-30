@@ -1,0 +1,24 @@
+#!/usr/bin/env rc
+problem=`{cat | chomp}
+echo '----'
+chomp <<PROMPT | llm --key $OPENAI_API_KEY -m gpt-3.5-turbo-instruct -o max_tokens 2048 $*
+Your task is to write modern TypeScript programs to solve problems. Recall relevant problems as examples, then proceed to solve the original problem. Focus on using correct types and minimise vertical space, and do not include comments or docstrings. Use modern ES6+ features like let, const, destructuring, arrow functions, and async/await for better syntax and readability.
+Adopt TypeScript for static typing, making your code more robust and maintainable.
+
+# Problem:
+$problem
+
+# Instruction:
+## Algorithms:
+Identify the core concepts or methods required to solve the problem.
+
+## Tutorial:
+Write a useful tutorial.
+
+## Example Problems:
+Provide three examples of relevant TypeScript code that uses these ideas. Note that your examples should be distinct from each other and the initial problem. If possible, provide a different point of view in each example. For each problem, describe the problem, explain the solution in detail, and then write the correct TypeScript code.
+
+## TypeScript code to solve the original problem:
+- Explanation of the solution:
+- TypeScript code to solve the problem:
+PROMPT

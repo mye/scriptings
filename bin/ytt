@@ -1,5 +1,7 @@
 #!/usr/bin/env rc
-# Get text transcribed from youtube video URL
+# Get text transcribed from a youtube video
+# $1 is the youtube URL
+# requires curl, ffmpeg, jq and yt-dlp
 
 tube_audio=`{yta $1}
 opus_audio=`{speech_opus $tube_audio}

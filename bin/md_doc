@@ -1,0 +1,4 @@
+#!/usr/bin/env rc
+# read markdown from stdin, write asciidoc to stdout
+
+pandoc -f markdown -t asciidoc
