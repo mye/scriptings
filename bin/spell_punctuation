@@ -1,0 +1,55 @@
+#!/usr/bin/env rc
+# Text corrector that shows plaintext word level diffs for punctuation problems
+# You must have wdiff installed and the `llm` command (pix install llm)
+
+input_file=`{mktemp}
+output_file=`{mktemp}
+cat >$input_file
+
+text=`{cat $input_file}
+
+cat <<PROMPT | llm -m gpt-3.5-turbo-instruct >>$out
+Suggest more concise language that would be clearer to a reader. Rewrite the given text between triple quotes.
+Double-check wheter a hyphen is needed.
+over-the-counter -> over the counter
+Comma between phrases
+Known as good and bad, or bad and good -> Known as good and bad or bad and good
+
+[[It's better to have no comma between these phrases]] The report must contain an accurate and current listing of securities held in all accounts that trade, or are capable of trading securities.
+
+Text: """
+Where necessary, adapt the clothes to suit particular circumstances of the work of their area.
+"""
+
+Suggestion: """
+Where necessary, adapt the clothes to suit circumstances of the work of their area.
+"""
+
+Text: """
+As a general rule, concise language is clearer to the reader.
+"""
+
+Suggestion: """
+As a rule, concise language is clearer to the reader.
+"""
+
+Text: """
+"""
+
+Suggestion: """
+"""
+
+
+
+Text: """
+$text
+"""
+PROMPT
+
+echo
+echo
+
+wdiff -ns $inp $out
+
+#cat $out
+#rm $inp $out
