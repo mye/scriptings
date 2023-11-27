@@ -3,8 +3,7 @@
 text=`{cat}
 
 cat <<PROMPT | chomp | turbo_instruct
-Suggest nine unix-style filenames that contain the text between """.
-Use underscores to separate words if there is more than one.
+Summarize the text between triple quotes into nine unix-style file names or command names. Prefer short names and use common abbreviations for well known words.
 Text: """
 $text
 """

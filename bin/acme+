@@ -31,7 +31,9 @@ fi
 
 
 #exec acme -a -f /mnt/font/FiraCode-Retina/12a/font -F /mnt/font/GoMono/12a/font "$@" &
-acme -a -f /mnt/font/IntelOneMono-Regular/10a/font "$@" &
+#acme -a -f /mnt/font/IntelOneMono-Regular/10a/font "$@" &
+#acme -a -f /mnt/font/FiraCode-Retina/12a/font -F /mnt/font/Iosevka-Fixed-Medium-Extended/12a/font "$@" &
+acme -a "$@" &
 
 sleep 1 # wait for acme FS
 if [[ -z $(pgrep -f acmedefaults) ]]; then

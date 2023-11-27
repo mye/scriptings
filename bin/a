@@ -16,11 +16,10 @@ for(f in $dotenvs){
 }
 
 wd=`{pwd}
-cd
 
 # start acme with project dump
 
-dumpfile=$wd/data/acme.dump
+dumpfile=$wd/data/acme
 
 if(test -f $dumpfile){
     echo 'Loading existing '$dumpfile
@@ -36,7 +35,7 @@ if not{
 /mnt/font/IntelOneMono-Regular/10a/font
 /mnt/font/FiraCode-Retina/10a/font
   0.0000000  30.0000000  70.0000000
-w Newcol Kill Putall [Dump $dumpfile] Exit $wd Putall Tickets >ticket s/bin touch
+w  | Kill $wd [Dump data/acme] Putall Exit | >LLM >ticket s/bin
 c          0 New Cut Paste Snarf Sort Zerox Delcol
 c          1 New Cut Paste Snarf Sort Zerox Delcol
 c          2 New Cut Paste Snarf Sort Zerox Delcol
