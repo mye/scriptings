@@ -5,7 +5,9 @@
 dotenvs=()
 cwd=`{pwd}
 
-while(~ $cwd /home/*){
+homedir=`{dirname $home}
+
+while(~ $cwd $homedir/*){
     if(test -f $cwd/.env) dotenvs=($cwd/.env $dotenvs)
     cwd=`{dirname $cwd}
 }
@@ -31,11 +33,11 @@ if not{
     cat <<! > $dumpfile
     acme+ -l $dumpfile
 }
-/home/lo
+$home
 /mnt/font/IntelOneMono-Regular/10a/font
 /mnt/font/FiraCode-Retina/10a/font
   0.0000000  30.0000000  70.0000000
-w  | Kill $wd [Dump data/acme] Putall Exit | >LLM >ticket s/bin
+w  | Kill $wd [Dump data/acme] Putall Exit | >ticket s/bin
 c          0 New Cut Paste Snarf Sort Zerox Delcol
 c          1 New Cut Paste Snarf Sort Zerox Delcol
 c          2 New Cut Paste Snarf Sort Zerox Delcol
