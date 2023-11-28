@@ -1,0 +1,16 @@
+#!/usr/bin/env rc
+# retrieve the HTML document at the given URL and write as markdown
+# https://github.com/postlight/parser
+
+echo '---
+title: foo
+lang: en
+---
+
+'
+echo $1
+echo
+
+postlight-parser $1 \
+| jq -r .content \
+| pandoc -f html -t markdown
