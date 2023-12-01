@@ -18,6 +18,7 @@ for(f in $dotenvs){
 }
 
 wd=`{pwd}
+cd $home
 
 # start acme with project dump
 
