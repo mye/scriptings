@@ -35,8 +35,8 @@ if not{
     acme+ -l $dumpfile
 }
 $home
+/mnt/font/GoRegular/10a/font
 /mnt/font/IntelOneMono-Regular/10a/font
-/mnt/font/FiraCode-Retina/10a/font
   0.0000000  30.0000000  70.0000000
 w  | Kill $wd [Dump data/acme] Putall Exit | >ticket s/bin
 c          0 New Cut Paste Snarf Sort Zerox Delcol
