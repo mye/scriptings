@@ -35,10 +35,10 @@ if not{
     acme+ -l $dumpfile
 }
 $home
-/mnt/font/GoRegular/10a/font
+/mnt/font/GoRegular/12a/font
 /mnt/font/IntelOneMono-Regular/10a/font
   0.0000000  30.0000000  70.0000000
-w  | Kill $wd [Dump data/acme] Putall Exit | >ticket s/bin
+w  | Kill $wd [Dump $wd/data/acme] Putall Exit | >ticket s/bin
 c          0 New Cut Paste Snarf Sort Zerox Delcol
 c          1 New Cut Paste Snarf Sort Zerox Delcol
 c          2 New Cut Paste Snarf Sort Zerox Delcol
