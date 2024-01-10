@@ -36,7 +36,7 @@ if not{
 }
 $home
 /mnt/font/GoRegular/12a/font
-/mnt/font/IntelOneMono-Regular/10a/font
+/mnt/font/IntelOneMono-Regular/11a/font
   0.0000000  30.0000000  70.0000000
 w  | Kill $wd [Dump $wd/data/acme] Putall Exit | >ticket s/bin
 c          0 New Cut Paste Snarf Sort Zerox Delcol
