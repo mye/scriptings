@@ -1,0 +1,20 @@
+@startuml http get
+participant Client
+participant Server
+participant ResourceGenerator
+
+Client -> Server: HTTP Request
+activate Server
+Server -> Server: Verify Request
+Server -> Server: Decode URI
+Server -> Server: Check Resource & Permissions
+Server -> ResourceGenerator: Generate Resource
+activate ResourceGenerator
+ResourceGenerator -> ResourceGenerator: Select Representation
+ResourceGenerator --> Server: Resource Data
+deactivate ResourceGenerator
+Server -> Server: Package Response
+Server -> Client: HTTP Response
+deactivate Server
+Server -> Server: Close Connection
+@enduml

@@ -3,7 +3,6 @@ import asyncio
 import json
 import random
 import time
-from operator import is_
 from pathlib import Path, PurePath
 
 from watchdog.observers import Observer
