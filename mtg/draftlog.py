@@ -4,6 +4,9 @@ ls -1 *.py | entr -c python draftlog.p
 
 """
 
+# %%
+# %pip install hypothesis httptools
+# %%
 import asyncio
 
 from httptools import HttpRequestParser  # type: ignore
