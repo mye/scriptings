@@ -1,0 +1,24 @@
+@startuml
+title HTTP Request Holder
+state "waiting for request" as waitingforrequest {
+  waitingforrequest --> holdingrequest : request received
+  state "forgetting request" as forgettingrequest {
+    forgettingrequest : **entry** / discard request
+    forgettingrequest --> waitingforrequest : request forgotten
+  }
+  state "processing request" as processingrequest {
+    processingrequest : **entry** / handle request
+    processingrequest --> waitingforrequest : request processed
+  }
+  state "parsing request" as parsingrequest {
+    parsingrequest : **entry** / process request bytes
+    parsingrequest --> processingrequest : / notify handler with request details
+  }
+  state "holding request" as holdingrequest {
+    holdingrequest : **entry** / start timeout
+    holdingrequest --> parsingrequest : handler interested [before timeout] / parse request details
+    holdingrequest --> forgettingrequest : timeout [not has_handler]
+    holdingrequest --> waitingforrequest : request handled / clean up
+  }
+}
+@enduml

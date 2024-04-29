@@ -1,10 +1,28 @@
 #!/usr/bin/env rc
+# Beaupy: beautify python in an Acme window
+
+#. 9.rc # this changes PATH to prefer PLAN9
+
+. $PLAN9/lib/acme.rc # ~/9/lib/acme.rc
 
 NO_COLOR=1
 
+# TODO: check for .py in filename
 
-#black $filename
+tag=`{winread tag}
+filename=$tag(1)
 
-isort . --check --diff
+winctl put
 
-ruff . --ignore E501
+# black can't even convert tabs to spaces
+# instead it whines about indentation and stops working
+
+sed -i 's/\t/    /g' $filename
+black $filename
+
+isort $filename
+
+winctl get
+winctl clean
+
+ruff --ignore E501 $filename

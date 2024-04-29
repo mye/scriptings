@@ -1,0 +1,51 @@
+statechart:
+  name: HTTP Request Holder
+  description: >
+    Manages HTTP requests by holding them until a handler expresses interest. Parses and processes
+    the request details on demand. Forgets about the request after a timeout if no handler is interested.
+  root state:
+    name: waiting for request
+    transitions:
+      - target: holding request
+        event: request received
+    contract:
+      - always: not active('processing request') or has_handler
+    # MARK: States
+    states:
+      - name: holding request
+        on entry: start timeout
+        transitions:
+          - target: parsing request
+            event: handler interested
+            guard: before timeout
+            action: parse request details
+          - target: forgetting request
+            event: timeout
+            guard: not has_handler
+          - target: waiting for request
+            event: request handled
+            action: clean up
+
+      - name: parsing request
+        on entry: process request bytes
+        transitions:
+          - target: processing request
+            action: notify handler with request details
+        contract:
+          - always: request_bytes_processed or handler_notified
+
+      - name: processing request
+        on entry: handle request
+        transitions:
+          - target: waiting for request
+            event: request processed
+        contract:
+          - always: response_ready or request_discarded
+
+      - name: forgetting request
+        on entry: discard request
+        transitions:
+          - target: waiting for request
+            event: request forgotten
+        contract:
+          - always: request_not_in_memory

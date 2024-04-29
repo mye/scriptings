@@ -1,7 +1,8 @@
 #!/usr/bin/env rc
 problem=`{cat | chomp}
 echo '----'
-chomp <<PROMPT | llm --key $OPENAI_API_KEY -m gpt-3.5-turbo-instruct -o max_tokens 4096 $*
+# gpt-3.5-turbo-instruct
+chomp <<PROMPT | llm --key $OPENAI_API_KEY -m 4t -o max_tokens 2048 $*
 Your task is to write unix shell commands to solve problems. Recall relevant problems as examples, then proceed to solve the original problem.
 
 # Problem:

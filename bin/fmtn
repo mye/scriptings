@@ -1,5 +1,8 @@
 #!/usr/bin/env rc
 # Reformat text to a narrow width
-nl='
-'
-sed -ze 's/^[\n[:space:]]*//' | tr $nl ' '  | tr -s ' ' | fmt -w 59
+
+#nl='
+#'
+#sed -ze 's/^[\n[:space:]]*//' | tr $nl ' '  | tr -s ' ' | fmt -w 59
+
+far 59

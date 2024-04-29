@@ -1,52 +1,75 @@
-#!/usr/bin/env rc
-. 9.rc
-. $PLAN9/lib/acme.rc # ~/9/lib/acme.rc
+#!/usr/bin/env python
+import sys
 
-# TODO figure out how to send middle mouse button "selection"
+from llama_cpp import Llama
+from llama_cpp.llama_types import CompletionChunk
 
-cr=''
 
-fn send_selection{
-	llm_in=$1
+def load_llama():
+    return Llama(
+        model_path="....bin",
+        n_gpu_layers=10,
+        # n_gpu_layers=32,
+        #    seed=1337,
+        # use_mlock=True,
+        n_threads=4,
+        n_ctx=2000,
+        # penalize_nl=False,
+    )
 
-	addr=<>{9p rdwr acme/$winid/addr} {
-		9 read $addr(1)>/dev/null
-		echo 'addr=dot' | 9p write acme/$winid/ctl
-		echo . >$addr(2)
-		ifs=(' ') sel_addr=`{9 read $addr(1)}
-		ifs=() sel_text=`{9p read acme/$winid/xdata}
-	}
-	echo -n $sel_text^$cr >$llm_in
-}
 
-cmd=$"*
-tag=`{winread tag}
-filename=$tag(1)
-newwindow
-winname $filename^' -Llama' #^$cmd
+def gen_complete(llm, prompt: str, max_tokens=16):
+    # instruct_prompt = f"USER: {prompt}\nASSISTANT:"
+    instruct_prompt = prompt
+    prompt_tokens = llm.tokenize(instruct_prompt.encode())
+    returned_tokens = 0
+    for token in llm.generate(
+        prompt_tokens, top_k=40, top_p=0.95, temp=1.0, repeat_penalty=1.1
+    ):
+        if token == Llama.token_eos():
+            print("debug", "EOS TOKEN", file=sys.stderr)
+            yield "\n"
+            break
 
-llmio=<>{llama} {
-	llm_out = $llmio(1)
-	llm_in = $llmio(2)
+        s = llm.detokenize([token]).decode("utf-8", errors="ignore")
+        print("debug", s, file=sys.stderr)
 
-	fn event{
-		switch($1$2){
-		case Ml ML
-			winwriteevent $*
-		case Mx
-			winwriteevent $*
-		case MX
-			#winwriteevent $*
-			send_selection $llm_in
-		}
-	}
+        if returned_tokens > max_tokens:
+            yield "\n"
+            break
+        else:
+            returned_tokens += 1
+            yield s
 
-	Appendlines <$llm_out &
-	pid_append=$apid
 
-	wineventloop
-}
+def process_chars(chars: list):
+    prompt = "".join(chars)
+    for completion in gen_complete(LLM, prompt, max_tokens=768):
+        print(completion, end="", flush=True)
 
-fn sigexit{
-	pkill -g $pid_append
-}
+
+print("debug", "loading llama", file=sys.stderr)
+
+LLM = load_llama()
+
+print("debug", "llama loaded", file=sys.stderr)
+
+chars = []
+while True:
+    try:
+        char = sys.stdin.read(1)
+        # print('debug', chars, file=sys.stderr)
+        if not char:
+            break
+
+        if char == "\r":
+            # print('debug', 'llama received', chars, file=sys.stderr)
+            process_chars(chars)
+            chars = []
+        else:
+            chars.append(char)
+    except KeyboardInterrupt:
+        # Stop the program when Ctrl+C is pressed
+        break
+
+print("debug", "llama exited", file=sys.stderr)
