@@ -1,0 +1,6 @@
+#!/usr/bin/env rc
+
+prefs=$home/eclipse_formatter.prefs
+
+git diff -z --staged --name-only --diff-filter=ACMR | grep -z '.java$' |
+    xargs -0 -I % echo 'fmtj -config '^$prefs^' %; git add -f %' | sh

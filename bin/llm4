@@ -1,2 +1,2 @@
 #!/usr/bin/env rc
-llm --key $OPENAI_API_KEY -m gpt-4 $*
+llm --key $OPENAI_API_KEY -m gpt-4-turbo $*

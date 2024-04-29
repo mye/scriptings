@@ -1,0 +1,35 @@
+#!/usr/bin/env python
+
+import os
+import sys
+from pathlib import Path
+
+from openai import AzureOpenAI
+
+azure_deployment = os.environ["AZURE_OPENAI_DEPLOYMENT"]
+
+client = AzureOpenAI(
+    api_key=os.environ["AZURE_OPENAI_API_KEY"],
+    api_version=os.environ["AZURE_OPENAI_API_VERSION"],
+    azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+    # azure_deployment=os.environ["AZURE_OPENAI_DEPLOYMENT"],
+)
+
+system_prompt_path = Path("system_prompt")
+if system_prompt_path.exists():
+    with open(system_prompt_path, "r") as f:
+        system_prompt = f.read()
+else:
+    system_prompt = "The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly."
+
+prompt = sys.stdin.read()
+
+system = {"role": "system", "content": system_prompt}
+user = {"role": "user", "content": prompt}
+
+completion = client.chat.completions.create(
+    messages=[system, user], model=azure_deployment
+)
+
+message = completion.choices[0].message
+print(message.content)

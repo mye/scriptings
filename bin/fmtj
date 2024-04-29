@@ -1,0 +1,3 @@
+#!/usr/bin/env rc
+
+$home/eclipse/java-2024-03/eclipse/eclipse -nosplash -data `{mktemp -d} -application org.eclipse.jdt.core.JavaCodeFormatter -verbose $*
